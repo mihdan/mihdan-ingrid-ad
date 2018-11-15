@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Mihdan: Ingrid AD
  * Description: Встраивание рекламных постов ссылок в сетку постов на архивных страницах
- * Version: 1.1
+ * Version: 1.2
  *
  * GitHub Plugin URI: https://github.com/mihdan/mihdan-ingrid-ad
  */
@@ -171,6 +171,7 @@ class Core {
 			'hierarchical'        => false,
 			'query_var'           => true,
 			'supports'            => array( 'title', 'excerpt', 'thumbnail' ),
+			'taxonomies'          => array( 'category' ),
 			'menu_icon'           => 'dashicons-layout',
 		);
 
