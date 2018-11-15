@@ -127,7 +127,7 @@ class Core {
 	 */
 	public function the_posts( $posts, \WP_Query $wp_query ) {
 
-		if ( ! $wp_query->is_admin && $wp_query->is_main_query() ) {
+		if ( ! $wp_query->is_admin && $wp_query->is_main_query() && ( $wp_query->is_archive() || $wp_query->is_home() ) ) {
 
 			// Получим случайный рекламный пост
 			$args = array(
