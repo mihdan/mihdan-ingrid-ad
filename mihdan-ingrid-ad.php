@@ -141,7 +141,14 @@ class Core {
 			$query = new \WP_Query( $args );
 
 			if ( $query->have_posts() ) {
-				$posts[] = $query->posts[0];
+				/** @var \WP_Post $post */
+				$_post = $query->posts[0];
+
+				// Получить позицию рекламного поста
+				$position = get_post_meta( $_post->ID, '_mihdan_ingrid_ad_post_position', true );
+
+				// Ставим новый пост в нужную позицию
+				array_splice( $posts, ( $position - 1 ), 0, $query->posts );
 			}
 
 			wp_reset_postdata();
@@ -197,7 +204,8 @@ class Core {
 	public function add_metabox( $post_type, \WP_Post $post ) {
 		$screens = array( self::POST_TYPE );
 		$content = function ( \WP_Post $post ) {
-			$url = get_post_meta( $post->ID, '_mihdan_ingrid_ad_post_source', true );
+			$url      = get_post_meta( $post->ID, '_mihdan_ingrid_ad_post_source', true );
+			$position = get_post_meta( $post->ID, '_mihdan_ingrid_ad_post_position', true );
 			?>
 			<table class="form-table">
 				<tbody>
@@ -207,6 +215,14 @@ class Core {
 					</th>
 					<td>
 						<input type="text" name="_mihdan_ingrid_ad_post_source" id="_mihdan_ingrid_ad_post_source" value="<?php echo esc_url( $url ); ?>" class="regular-text"/>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label for="_mihdan_ingrid_ad_post_position">Позиция на странице:</label>
+					</th>
+					<td>
+						<input type="text" name="_mihdan_ingrid_ad_post_position" id="_mihdan_ingrid_ad_post_position" value="<?php echo absint( $position ); ?>" class="regular-text"/>
 					</td>
 				</tr>
 				</tbody>
@@ -239,10 +255,12 @@ class Core {
 		}
 
 		// Очищаем значение поля input.
-		$data = esc_url_raw( $_POST['_mihdan_ingrid_ad_post_source'] );
+		$post_source   = esc_url_raw( $_POST['_mihdan_ingrid_ad_post_source'] );
+		$post_position = absint( $_POST['_mihdan_ingrid_ad_post_position'] );
 
 		// Обновляем данные в базе данных.
-		update_post_meta( $post_id, '_mihdan_ingrid_ad_post_source', $data );
+		update_post_meta( $post_id, '_mihdan_ingrid_ad_post_source', $post_source );
+		update_post_meta( $post_id, '_mihdan_ingrid_ad_post_position', $post_position );
 	}
 
 
