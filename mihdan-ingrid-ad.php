@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Mihdan: Ingrid AD
  * Description: Встраивание рекламных постов ссылок в сетку постов на архивных страницах
- * Version: 1.0
+ * Version: 1.1
  *
  * GitHub Plugin URI: https://github.com/mihdan/mihdan-ingrid-ad
  */
@@ -19,11 +19,6 @@ class Core {
 	 * Тип поста для хранения рекламных записей
 	 */
 	const POST_TYPE = 'mihdan_ingrid_ad';
-
-	/**
-	 * Ключ в мете для хранения ссылки
-	 */
-	const META_KEY = '_mihdan_ingrid_ad_post_source';
 
 	/**
 	 * Instance
@@ -66,7 +61,6 @@ class Core {
 	 * @access public
 	 */
 	public function __construct() {
-		//$this->setup();
 		$this->init();
 	}
 
@@ -161,21 +155,9 @@ class Core {
 	 * Регистрируем свой CPT для хранения рекламных постов
 	 */
 	public function register_cpt() {
-		$labels = array(
-			'name'          => 'Вопросы',
-			'singular_name' => 'Вопрос',
-			'menu_name'     => 'Архив вопросов',
-			'all_items'     => 'Все вопросы',
-			'add_new'       => 'Добавить вопрос',
-			'add_new_item'  => 'Добавить новый вопрос',
-			'edit'          => 'Редактировать',
-			'edit_item'     => 'Редактировать вопрос',
-			'new_item'      => 'Новый вопрос',
-		);
 
 		$args = array(
 			'label'               => 'Ingrid AD',
-			//'labels'              => $labels,
 			'description'         => '',
 			'public'              => true,
 			'publicly_queryable'  => true,
