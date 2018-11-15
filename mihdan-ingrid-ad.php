@@ -70,6 +70,9 @@ class Core {
 		$this->init();
 	}
 
+	/**
+	 * Инициализация хуков
+	 */
 	public function init() {
 		add_action( 'init', array( $this, 'register_cpt' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ), 10, 2 );
@@ -79,6 +82,14 @@ class Core {
 		add_filter( 'post_type_link', array( $this, 'post_type_link' ), 10, 2 );
 	}
 
+	/**
+	 * Подменяем ссылку на пост
+	 *
+	 * @param string   $post_link ссылка по умолчанию.
+	 * @param \WP_Post $post объект текущего поста.
+	 *
+	 * @return string
+	 */
 	public function post_type_link( $post_link, \WP_Post $post ) {
 
 		if ( self::POST_TYPE === get_post_type( $post->ID ) ) {
@@ -89,11 +100,11 @@ class Core {
 	}
 
 	/**
-	 * Добавить стандартный класс .post для нашего CPT
+	 * Добавляем стандартный класс .post для нашего CPT
 	 *
-	 * @param $classes
-	 * @param $class
-	 * @param $post_id
+	 * @param array   $classes массив классов по-умолчанию.
+	 * @param array   $class
+	 * @param integer $post_id идентификатор поста.
 	 *
 	 * @return array
 	 */
@@ -106,11 +117,17 @@ class Core {
 		return $classes;
 	}
 
+	/**
+	 * Добавляем случайный рекламный пост в массив записей до их вывода
+	 *
+	 * @param array     $posts массив постов по умолчанию.
+	 * @param \WP_Query $wp_query объект запроса
+	 *
+	 * @return array
+	 */
 	public function the_posts( $posts, \WP_Query $wp_query ) {
 
 		if ( ! $wp_query->is_admin && $wp_query->is_main_query() ) {
-
-			//echo '<!-- zalupa';
 
 			// Получим случайный рекламный пост
 			$args = array(
@@ -124,15 +141,8 @@ class Core {
 			$query = new \WP_Query( $args );
 
 			if ( $query->have_posts() ) {
-				//while ( $query->have_posts() ) {
-				//	$query->the_post();
-				//
-				//}
 				$posts[] = $query->posts[0];
 			}
-
-			//print_r( $posts );
-			//echo '-->';
 
 			wp_reset_postdata();
 		}
@@ -140,6 +150,9 @@ class Core {
 		return $posts;
 	}
 
+	/**
+	 * Регистрируем свой CPT для хранения рекламных постов
+	 */
 	public function register_cpt() {
 		$labels = array(
 			'name'          => 'Вопросы',
@@ -175,6 +188,12 @@ class Core {
 		register_post_type( self::POST_TYPE, $args );
 	}
 
+	/**
+	 * Добавляем метабокс с полями на страницу редактирования рекламного поста
+	 *
+	 * @param string   $post_type тип записи.
+	 * @param \WP_Post $post объект поста.
+	 */
 	public function add_metabox( $post_type, \WP_Post $post ) {
 		$screens = array( self::POST_TYPE );
 		$content = function ( \WP_Post $post ) {
@@ -197,6 +216,11 @@ class Core {
 		add_meta_box( 'post_additional', 'Дополнительно', $content, $screens, 'advanced', 'high' );
 	}
 
+	/**
+	 * Обработчик сохранения данных метабокса
+	 *
+	 * @param integer $post_id идентификатор поста.
+	 */
 	public function save_metabox( $post_id ) {
 
 		// Убедимся что поле установлено.
@@ -225,7 +249,7 @@ class Core {
 }
 
 /**
- * Хелпре для инициализации плагина
+ * Хелпер для инициализации плагина
  *
  * @return Core
  */
