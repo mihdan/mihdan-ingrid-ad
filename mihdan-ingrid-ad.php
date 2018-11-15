@@ -3,6 +3,8 @@
  * Plugin Name: Mihdan: Ingrid AD
  * Description: Встраивание рекламных постов ссылок в сетку постов на архивных страницах
  * Version: 1.0
+ *
+ * GitHub Plugin URI: https://github.com/mihdan/mihdan-ingrid-ad
  */
 
 namespace Mihdan_Ingrid_AD;
