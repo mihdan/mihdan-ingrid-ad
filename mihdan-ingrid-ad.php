@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Mihdan: Ingrid AD
  * Description: Встраивание рекламных постов ссылок в сетку постов на архивных страницах
- * Version: 1.2
+ * Version: 1.2.1
  *
  * GitHub Plugin URI: https://github.com/mihdan/mihdan-ingrid-ad
  */
@@ -121,7 +121,7 @@ class Core {
 	 */
 	public function the_posts( $posts, \WP_Query $wp_query ) {
 
-		if ( ! $wp_query->is_admin && $wp_query->is_main_query() && ( $wp_query->is_archive() || $wp_query->is_home() ) ) {
+		if ( ! $wp_query->is_admin && $wp_query->is_main_query() && ( $wp_query->is_archive() || $wp_query->is_home() ) && $wp_query->found_posts ) {
 
 			// Получим случайный рекламный пост
 			$args = array(
